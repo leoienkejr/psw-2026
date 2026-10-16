@@ -120,6 +120,11 @@ function App() {
         aoMudar={setStatus}
       />
 
+      {/* Derivado no render: nada de useState novo. */}
+      <p className="contador" aria-live="polite">
+        Exibindo {visiveis.length} de {filmes.length} filmes
+      </p>
+
       <main>
         {erroAcao && (
           <p className="erro" role="alert">{erroAcao}</p>

@@ -1,17 +1,5 @@
-function rotuloStatus(status) {
-  if (status === "assistido") return "Assistido"
-  if (status === "assistindo") return "Assistindo"
-  if (status === "quero") return "Quero assistir"
-  return status
-}
-
-const estrelas = (nota) => {
-  let texto = ""
-  for (let i = 1; i <= 5; i++) {
-    texto += i <= nota ? "★" : "☆"
-  }
-  return texto
-}
+import Estrelas from './Estrelas.jsx'
+import Badge from './Badge.jsx'
 
 function CardFilme({ filme, aoEditar, aoRemover }) {
   return (
@@ -21,10 +9,8 @@ function CardFilme({ filme, aoEditar, aoRemover }) {
       <p>
         {filme.ano} · {filme.genero}
       </p>
-      <span className="estrelas" aria-label={`Nota ${filme.nota} de 5`}>
-        {estrelas(filme.nota)}
-      </span>
-      <span className={`badge ${filme.status}`}>{rotuloStatus(filme.status)}</span>
+      <Estrelas nota={filme.nota} />
+      <Badge status={filme.status} />
       <button type="button" className="btn-editar" onClick={() => aoEditar(filme)}>
         Editar
       </button>

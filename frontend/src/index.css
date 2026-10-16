@@ -279,6 +279,12 @@ nav button.ativo {
     text-align: center;
 }
 
+.contador {
+    padding: 0 var(--espaco-3);
+    color: var(--cor-texto-suave);
+    font-size: 0.9rem;
+}
+
 footer {
     padding: var(--espaco-3);
     text-align: center;
