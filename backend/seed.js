@@ -58,8 +58,8 @@ const filmes = [
     ano: 2002,
     genero: 'Drama',
     poster: 'https://image.tmdb.org/t/p/w300/gfnXixcGC060QcG6JPxN6AMdVsq.jpg',
-    nota: 5,
-    status: 'assistido',
+    nota: 4,
+    status: 'quero',
     comentario: 'Fotografia e ritmo: um marco brasileiro.'
   }
 ]

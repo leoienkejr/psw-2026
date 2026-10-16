@@ -22,9 +22,16 @@ function salvarFilmes(lista) {
 }
 
 app.get('/filmes', (req, res) => {
-  const { status } = req.query
+  const { status, q } = req.query
 
   let filmes = lerFilmes()
+
+  // Busca por substring no título, ignorando maiúsculas e minúsculas
+  // (o mesmo que o filtro de texto do frontend, agora do lado do servidor).
+  if (q) {
+    const textoBusca = String(q).toLowerCase()
+    filmes = filmes.filter((filme) => filme.titulo.toLowerCase().includes(textoBusca))
+  }
 
   if (status) {
     filmes = filmes.filter(
@@ -44,6 +51,33 @@ app.get('/filmes/:id', (req, res) => {
   }
 
   res.json(filme)
+})
+
+// ---------------------------------------------------------------------------
+// GET /stats — resumo da coleção (portado das funções puras da ANP 05).
+// Contagens e média calculadas com reduce, sem contadores escritos à mão.
+// ---------------------------------------------------------------------------
+app.get('/stats', (req, res) => {
+  const filmes = lerFilmes()
+
+  // Quantidade de filmes em cada status: o acumulador começa como objeto
+  // vazio e cada filme soma 1 na posição do seu status.
+  const porStatus = filmes.reduce((contagem, filme) => {
+    contagem[filme.status] = (contagem[filme.status] || 0) + 1
+    return contagem
+  }, {})
+
+  // Soma das notas com reduce; o * 10 / 10 com Math.round arredonda
+  // a média para 1 casa decimal (mesma técnica da ANP 05).
+  const somaNotas = filmes.reduce((soma, filme) => soma + filme.nota, 0)
+  const mediaNotas =
+    filmes.length === 0 ? 0 : Math.round((somaNotas / filmes.length) * 10) / 10
+
+  res.json({
+    total: filmes.length,
+    porStatus,
+    mediaNotas
+  })
 })
 
 app.post('/filmes', (req, res) => {
