@@ -3,13 +3,13 @@ import Header from './components/Header.jsx'
 import Filtros from './components/Filtros.jsx'
 import ListaFilmes from './components/ListaFilmes.jsx'
 import ModalFilme from './components/ModalFilme.jsx'
-import { gerarId } from './data/filmes.js'
-import { listar } from './api.js'
+import { listar, criar, atualizar, removerFilme as removerFilmeNaApi } from './api.js'
 
 function App() {
   const [filmes, setFilmes] = useState([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(null)
+  const [erroAcao, setErroAcao] = useState(null)
   const [status, setStatus] = useState('todos')
   const [busca, setBusca] = useState('')
   const [modalAberto, setModalAberto] = useState(false)
@@ -39,20 +39,44 @@ function App() {
     return casaStatus && casaBusca
   })
 
-  function adicionar(dados) {
-    setFilmes([...filmes, { id: gerarId(filmes), ...dados }])
+  async function adicionar(dados) {
+    setErroAcao(null)
+    try {
+      // Primeiro a API; o estado só é atualizado com o filme já salvo no
+      // backend (inclusive o id, que agora é gerado por ele).
+      const novoFilme = await criar(dados)
+      setFilmes([...filmes, novoFilme])
+      return true
+    } catch (motivo) {
+      setErroAcao(`Não foi possível salvar o filme: ${motivo.message}`)
+      return false
+    }
   }
 
-  function remover(id) {
-    setFilmes(filmes.filter((filme) => filme.id !== id))
+  async function removerFilme(id) {
+    setErroAcao(null)
+    try {
+      await removerFilmeNaApi(id)
+      setFilmes(filmes.filter((filme) => filme.id !== id))
+      return true
+    } catch (motivo) {
+      setErroAcao(`Não foi possível remover o filme: ${motivo.message}`)
+      return false
+    }
   }
 
-  function editar(id, alteracoes) {
-    setFilmes(
-      filmes.map((filme) =>
-        filme.id === id ? { ...filme, ...alteracoes } : filme
+  async function editar(id, alteracoes) {
+    setErroAcao(null)
+    try {
+      const filmeAtualizado = await atualizar(id, alteracoes)
+      setFilmes(
+        filmes.map((filme) => (filme.id === id ? filmeAtualizado : filme))
       )
-    )
+      return true
+    } catch (motivo) {
+      setErroAcao(`Não foi possível atualizar o filme: ${motivo.message}`)
+      return false
+    }
   }
 
   function abrirModalNovo() {
@@ -70,13 +94,17 @@ function App() {
     setFilmeEditando(null)
   }
 
-  function salvarModal(dados) {
-    if (filmeEditando === null) {
-      adicionar(dados)
-    } else {
-      editar(filmeEditando.id, dados)
+  async function salvarModal(dados) {
+    const sucesso =
+      filmeEditando === null
+        ? await adicionar(dados)
+        : await editar(filmeEditando.id, dados)
+
+    // Só fecha o modal quando a operação deu certo; em caso de erro,
+    // a mensagem aparece e o usuário pode corrigir os dados.
+    if (sucesso) {
+      fecharModal()
     }
-    fecharModal()
   }
 
   return (
@@ -93,6 +121,10 @@ function App() {
       />
 
       <main>
+        {erroAcao && (
+          <p className="erro" role="alert">{erroAcao}</p>
+        )}
+
         {carregando ? (
           <section id="lista" aria-live="polite">
             <p className="carregando">Carregando filmes…</p>
@@ -109,7 +141,7 @@ function App() {
               <ListaFilmes
                 filmes={visiveis}
                 aoEditar={abrirModalEdicao}
-                aoRemover={remover}
+                aoRemover={removerFilme}
               />
             )}
           </section>

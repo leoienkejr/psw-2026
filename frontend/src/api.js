@@ -1,18 +1,49 @@
-import { filmesIniciais } from './data/filmes.js'
+// Cliente da API real (backend Express). O mock foi removido.
+//
+// A URL base pode ser ajustada criando frontend/.env com:
+//   VITE_API_URL=http://localhost:3000
+// Sem essa variável, usa-se o endereço padrão do backend da disciplina.
+const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
-// Chave de teste: quando true, listar() falha para exercitar o tratamento de erro.
-const SIMULAR_FALHA = false
+// Função central: faz a requisição, converte o corpo e transforma
+// respostas de erro (4xx/5xx) em exceções com a mensagem do backend.
+async function requisicao(caminho, opcoes = {}) {
+  const resposta = await fetch(`${BASE_URL}${caminho}`, {
+    headers: { 'Content-Type': 'application/json' },
+    ...opcoes,
+  })
 
-const ATRASO_MS = 800
+  if (!resposta.ok) {
+    const corpo = await resposta.json().catch(() => null)
+    throw new Error(corpo?.erro || `Erro ${resposta.status}: ${resposta.statusText}`)
+  }
 
-export function listar() {
-  return new Promise((resolver, rejeitar) => {
-    setTimeout(() => {
-      if (SIMULAR_FALHA) {
-        rejeitar(new Error('Não foi possível carregar os filmes.'))
-        return
-      }
-      resolver([...filmesIniciais])
-    }, ATRASO_MS)
+  // DELETE devolve 204 sem corpo.
+  if (resposta.status === 204) return null
+
+  return resposta.json()
+}
+
+export async function listar() {
+  return requisicao('/filmes')
+}
+
+export async function criar(filme) {
+  return requisicao('/filmes', {
+    method: 'POST',
+    body: JSON.stringify(filme),
+  })
+}
+
+export async function atualizar(id, alteracoes) {
+  return requisicao(`/filmes/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(alteracoes),
+  })
+}
+
+export async function removerFilme(id) {
+  return requisicao(`/filmes/${id}`, {
+    method: 'DELETE',
   })
 }

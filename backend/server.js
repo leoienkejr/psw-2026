@@ -108,6 +108,59 @@ app.delete('/filmes/:id', (req, res) => {
   res.status(204).end()
 })
 
+// ---------------------------------------------------------------------------
+// GET /tmdb/search?q=texto — busca filmes na API pública do TMDB (opcional).
+// Requer TMDB_API_KEY no .env (https://www.themoviedb.org/settings/api).
+// ---------------------------------------------------------------------------
+const CHAVE_TMDB = process.env.TMDB_API_KEY
+
+app.get('/tmdb/search', async (req, res) => {
+  if (!CHAVE_TMDB) {
+    return res.status(503).json({
+      erro: 'TMDB_API_KEY não configurada no .env do backend.'
+    })
+  }
+
+  const { q } = req.query
+
+  if (!q || !String(q).trim()) {
+    return res.status(400).json({ erro: 'Informe o parâmetro de busca ?q=' })
+  }
+
+  const url =
+    `https://api.themoviedb.org/3/search/movie` +
+    `?api_key=${CHAVE_TMDB}&language=pt-BR&query=${encodeURIComponent(q)}`
+
+  try {
+    const resposta = await fetch(url)
+
+    if (!resposta.ok) {
+      return res.status(502).json({
+        erro: `TMDB respondeu com status ${resposta.status}`
+      })
+    }
+
+    const dados = await resposta.json()
+
+    // Mapeia para o formato enxuto usado pelo CineTrack.
+    const resultados = (dados.results || []).map((filme) => ({
+      id_tmdb: filme.id,
+      titulo: filme.title,
+      ano: filme.release_date ? Number(filme.release_date.slice(0, 4)) : null,
+      sinopse: filme.overview || '',
+      poster: filme.poster_path
+        ? `https://image.tmdb.org/t/p/w300${filme.poster_path}`
+        : ''
+    }))
+
+    res.json(resultados)
+  } catch (erroRede) {
+    res.status(502).json({
+      erro: `Falha ao contatar o TMDB: ${erroRede.message}`
+    })
+  }
+})
+
 const PORT = process.env.PORT || 3000
 
 app.listen(PORT, () => {
