@@ -1,8 +1,9 @@
 import Titulo from './Titulo.jsx'
 
-// Cabeçalho com busca e botão de adicionar.
-// Ainda sem eventos: os handlers entram nas etapas seguintes.
-function Header() {
+// Cabeçalho com busca controlada e botão de adicionar.
+// O valor do campo vem de App (estado busca) e cada tecla sobe
+// pelo handler aoDigitar via onChange.
+function Header({ busca, aoDigitar }) {
   return (
     <header>
       <Titulo
@@ -15,6 +16,8 @@ function Header() {
         id="busca"
         aria-label="Buscar filme por título"
         placeholder="Buscar filme..."
+        value={busca}
+        onChange={(evento) => aoDigitar(evento.target.value)}
       />
 
       {/* O "+" curto aparece em telas menores; o longo a partir de 1024px. */}
