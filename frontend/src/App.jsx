@@ -5,15 +5,39 @@ import ListaFilmes from './components/ListaFilmes.jsx'
 import ModalFilme from './components/ModalFilme.jsx'
 import { listar, criar, atualizar, removerFilme as removerFilmeNaApi } from './api.js'
 
+// Status aceitos pelos botões de filtro; usado para sanitizar o valor
+// restaurado do localStorage.
+const STATUS_VALIDOS = new Set(['todos', 'assistido', 'assistindo', 'quero'])
+
 function App() {
   const [filmes, setFilmes] = useState([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState(null)
   const [erroAcao, setErroAcao] = useState(null)
-  const [status, setStatus] = useState('todos')
-  const [busca, setBusca] = useState('')
   const [modalAberto, setModalAberto] = useState(false)
   const [filmeEditando, setFilmeEditando] = useState(null)
+
+  // Inicializador preguiçoso: a função roda UMA vez, no primeiro render,
+  // e evita ler o localStorage a cada atualização do componente.
+  const [status, setStatus] = useState(() => {
+    try {
+      const salvo = JSON.parse(localStorage.getItem('cinetrack:filtros'))
+      return STATUS_VALIDOS.has(salvo?.status) ? salvo.status : 'todos'
+    } catch {
+      // Chave ausente ou JSON corrompido: cai no padrão.
+      return 'todos'
+    }
+  })
+
+  const [busca, setBusca] = useState(() => {
+    try {
+      const salvo = JSON.parse(localStorage.getItem('cinetrack:filtros'))
+      return typeof salvo?.busca === 'string' ? salvo.busca : ''
+    } catch {
+      // Chave ausente ou JSON corrompido: cai no padrão.
+      return ''
+    }
+  })
 
   useEffect(() => {
     listar()
@@ -32,6 +56,15 @@ function App() {
     const sufixo = filmes.length === 1 ? 'filme' : 'filmes'
     document.title = `CineTrack (${filmes.length} ${sufixo})`
   }, [filmes])
+
+  // Persiste as preferências de interface (não os filmes, que vêm da API)
+  // sempre que busca ou status mudam. Os filmes continuam vindo de api.js.
+  useEffect(() => {
+    localStorage.setItem(
+      'cinetrack:filtros',
+      JSON.stringify({ busca, status })
+    )
+  }, [busca, status])
 
   const visiveis = filmes.filter((filme) => {
     const casaStatus = status === 'todos' || filme.status === status
