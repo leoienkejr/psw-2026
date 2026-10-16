@@ -5,6 +5,28 @@ Catálogo pessoal de filmes ("o que já vi, estou vendo e quero ver").
 - `cinetrack/parte1/` — versão em HTML, CSS e JavaScript puro (Parte 1 do trabalho, Marco 1).
 - `backend/` — API REST com Express que salva os filmes em `data/filmes.json`.
 - `frontend/` — app React (Vite) que consome a API do backend.
+- `docs/api.md` — referência completa das rotas da API.
+- `docs/testes-parte1.md` e `docs/testes-parte2.md` — testes registrados de cada parte.
+
+## Do zero (resumo rápido)
+
+```bash
+git clone https://github.com/leoienkejr/psw-2026.git
+cd psw-2026
+
+# backend (API em http://localhost:3000)
+cd backend
+npm install
+npm run seed     # cria data/filmes.json com os 6 filmes iniciais
+npm start
+
+# frontend (app em http://localhost:5173) — em outro terminal
+cd ../frontend
+npm install
+npm run dev
+```
+
+Detalhes de cada parte abaixo.
 
 ## Como rodar a parte 1
 
@@ -58,12 +80,20 @@ se o arquivo não existir). O servidor responde em:
 
 | Método | Rota            | Descrição                                   |
 |--------|-----------------|---------------------------------------------|
-| GET    | `/filmes`       | Lista todos os filmes (filtro opcional `?status=`) |
+| GET    | `/filmes`       | Lista todos os filmes (filtros opcionais `?q=` e `?status=`) |
 | GET    | `/filmes/:id`   | Detalhe de um filme                          |
 | POST   | `/filmes`       | Cria um filme (corpo JSON)                   |
 | PUT    | `/filmes/:id`   | Atualiza um filme                            |
 | DELETE | `/filmes/:id`   | Remove um filme (resposta 204)               |
+| GET    | `/stats`        | Resumo da coleção (total, por status, média de notas) |
 | GET    | `/tmdb/search`  | **Opcional:** busca no TMDB (`?q=`), exige `TMDB_API_KEY` no `.env` |
+
+O POST e o PUT validam o corpo no servidor (título, ano entre 1888 e 2030,
+gênero, nota inteira de 1 a 5 e status entre `assistido`, `assistindo` e
+`quero`) e devolvem **400 com todos os erros de uma vez**:
+`{ "erros": ["A nota deve ser um número inteiro entre 1 e 5.", ...] }`.
+Códigos de resposta e corpos esperados de cada rota estão em
+[`docs/api.md`](docs/api.md).
 
 ## Como rodar o frontend
 
