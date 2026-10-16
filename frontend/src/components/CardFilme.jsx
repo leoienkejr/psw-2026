@@ -1,4 +1,3 @@
-// Funções auxiliares puras herdadas da Parte 1
 function rotuloStatus(status) {
   if (status === "assistido") return "Assistido"
   if (status === "assistindo") return "Assistindo"
@@ -14,9 +13,6 @@ const estrelas = (nota) => {
   return texto
 }
 
-// Recebe um único objeto filme por props e o desenha como card.
-// Os botões disparam os callbacks recebidos do App:
-// Editar abre o modal com os dados preenchidos; Remover exclui na hora.
 function CardFilme({ filme, aoEditar, aoRemover }) {
   return (
     <article className="card" data-id={filme.id}>

@@ -1,15 +1,5 @@
-/*
-  Cores do projeto (paleta escolhida no coolors.co):
-  - Primária: #1E3A8A (azul escuro)
-  - Acento:   #F59E0B (âmbar/laranja)
-  - Neutro:   #F4F4F5 (cinza claro de fundo)
-
-  Tema escuro automático via prefers-color-scheme.
-*/
-
 /* ---------- Variáveis do tema ---------- */
 :root {
-    /* cores base */
     --cor-primaria: #1E3A8A;
     --cor-primaria-contraste: #FFFFFF;
     --cor-acento: #F59E0B;
@@ -22,23 +12,21 @@
     --cor-borda: #DDDDDD;
     --cor-overlay: rgba(0, 0, 0, 0.6);
 
-    /* cores semânticas dos status */
-    --cor-assistido-fundo: #D1FAE5;   /* verde: concluído */
+    --cor-assistido-fundo: #D1FAE5;
     --cor-assistido-texto: #065F46;
-    --cor-assistindo-fundo: #FEF3C7;  /* âmbar: em andamento */
+    --cor-assistindo-fundo: #FEF3C7;
     --cor-assistindo-texto: #92400E;
-    --cor-quero-fundo: #DBEAFE;       /* azul: planejado */
+    --cor-quero-fundo: #DBEAFE;
     --cor-quero-texto: #1E40AF;
 
-    /* raios e espaçamentos */
     --raio-sm: 4px;
     --raio-md: 8px;
     --raio-pill: 999px;
     --espaco-05: 0.5rem;
     --espaco-1: 0.35rem;
     --espaco-2: 0.75rem;
-    --espaco-3: 1rem;   /* 16px */
-    --espaco-4: 1.5rem; /* 24px */
+    --espaco-3: 1rem;
+    --espaco-4: 1.5rem;
     --espaco-5: 2rem;
 }
 
@@ -113,7 +101,6 @@ header h1 {
     font-size: clamp(1.5rem, 1rem + 2.5vw, 2rem);
 }
 
-/* Estilos do Titulo (Atividade 1) reaproveitados no Header */
 .titulo h1 {
     font-size: clamp(1.5rem, 1rem + 2.5vw, 2rem);
     line-height: 1.2;
@@ -149,7 +136,6 @@ header h1 {
     transform: translateY(-1px);
 }
 
-/* Na base mobile o botão mostra apenas o "+" */
 .btn-adicionar-longo {
     display: none;
 }
@@ -184,16 +170,15 @@ nav button.ativo {
 /* ---------- Lista de cards ---------- */
 #lista {
     display: grid;
-    /* colunas automáticas: entram quantas couberem, mínimo 200px */
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: var(--espaco-3);
     padding: var(--espaco-3);
 }
-/* Mensagens de estado da lista (Aula 5): carregando, erro e vazio */
+
 .carregando,
 .erro,
 .vazio {
-    grid-column: 1 / -1;   /* ocupa a largura toda da grid */
+    grid-column: 1 / -1;
     padding: var(--espaco-4);
     text-align: center;
     color: var(--cor-texto-suave);
@@ -230,7 +215,7 @@ nav button.ativo {
 .card img {
     width: 100%;
     aspect-ratio: 2 / 3;
-    object-fit: cover;         /* preenche sem distorcer */
+    object-fit: cover;
     display: block;
     border-radius: var(--raio-sm);
 }
@@ -287,7 +272,6 @@ nav button.ativo {
     transform: translateY(-1px);
 }
 
-/* Mensagem do estado vazio — filtro ou busca sem resultados */
 .vazio {
     padding: var(--espaco-4);
     color: var(--cor-texto-suave);
@@ -305,8 +289,6 @@ footer a {
 }
 
 /* ---------- Página adicionar.html ---------- */
-/* o conteúdo da página fica em um cartão centralizado,
-   com a mesma aparência do modal da index */
 #pagina-adicionar {
     /* largura explícita para o margin:auto centralizar também no mobile */
     width: min(528px, calc(100% - 2 * var(--espaco-3)));  /* 480px do modal + padding */
@@ -395,7 +377,6 @@ footer a {
     transform: scale(1.15);
 }
 
-/* Erros de validação do modal */
 .erros {
     margin-bottom: var(--espaco-2);
     padding: var(--espaco-2) var(--espaco-3);
@@ -415,7 +396,6 @@ footer a {
     }
 }
 
-/* Campos do formulário — valem para o modal e para adicionar.html */
 #form-filme {
     display: flex;
     flex-direction: column;

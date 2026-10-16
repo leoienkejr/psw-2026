@@ -1,5 +1,3 @@
-// Filtros de status. Componente controlado: o botão ativo vem de App
-// (estado elevado) e a seleção sobe pelo handler aoMudar via onClick.
 const FILTROS = [
   { status: 'todos', rotulo: 'Todos' },
   { status: 'assistido', rotulo: 'Assistido' },

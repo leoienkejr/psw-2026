@@ -1,4 +1,3 @@
-// Funções auxiliares puras
 function rotuloStatus(status) {
     if (status === "assistido") {
         return "Assistido"
@@ -22,7 +21,6 @@ const estrelas = (nota) => {
 
 console.log(rotuloStatus("quero"), estrelas(3))
 
-// Dados iniciais
 const filmesIniciais = [
     {
         id: 1,
@@ -86,17 +84,13 @@ const filmesIniciais = [
     }
 ]
 
-// Persistência: o prefixo da chave evita colisão com outros dados
-// gravados no mesmo domínio.
-
+// Prefixo da chave evita colisão com outros dados no mesmo domínio.
 const CHAVE = "cinetrack:filmes"
 
-// JSON só guarda dados, não funções — por isso o stringify.
 function salvar() {
     localStorage.setItem(CHAVE, JSON.stringify(filmes))
 }
 
-// JSON ausente ou corrompido: usa a lista inicial.
 function carregar() {
     try {
         const bruto = localStorage.getItem(CHAVE)
@@ -164,12 +158,10 @@ function renderizarCards(lista) {
     return fragmento
 }
 
-// Estado mutável da lista.
 let filmes = carregar()
 
 let statusAtual = "todos"
 
-// Texto da busca em minúsculas; "" = sem filtro de busca.
 let termoBusca = ""
 
 const rodapeInfo = document.querySelector("#total-filmes")
@@ -262,13 +254,11 @@ nav.addEventListener("click", (evento) => {
     atualizar()
 })
 
-// Modal de adicionar/edição
 const modal = document.querySelector("#modal")
 const modalTitulo = document.querySelector("#modal-titulo")
 const caixaErros = document.querySelector("#erros")
 const form = document.querySelector("#form-filme")
 
-// Filme em edição; null = modo adicionar.
 let editandoId = null
 
 function gerarId(lista) {
@@ -362,7 +352,6 @@ form.addEventListener("submit", (evento) => {
 
     const dados = Object.fromEntries(new FormData(form))
 
-    // Ano e nota chegam como string; nota vazia vira 0 (sem nota).
     const filmeDoForm = {
         titulo: dados.titulo.trim(),
         ano: Number(dados.ano),

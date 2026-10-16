@@ -1,8 +1,3 @@
-// seed.js (Aula 6): grava os 6 filmes iniciais do CineTrack em data/filmes.json.
-// Os dados são os mesmos do frontend (frontend/src/data/filmes.js),
-// que por sua vez foram copiados de cinetrack/parte1/app.js.
-// As chaves são sem acento: id, titulo, ano, genero, nota, status, comentario e poster.
-
 const fs = require('fs')
 const path = require('path')
 
@@ -69,16 +64,10 @@ const filmes = [
   }
 ]
 
-// Caminho do arquivo de dados: backend/data/filmes.json.
-// path.join evita juntar strings na mão e funciona em qualquer sistema operacional.
 const pastaDados = path.join(__dirname, 'data')
 const caminhoArquivo = path.join(pastaDados, 'filmes.json')
 
-// Cria a pasta data/ se ela não existir (recursive evita erro se já existir).
 fs.mkdirSync(pastaDados, { recursive: true })
-
-// Grava o JSON formatado com 2 espaços de indentação para ficar legível.
 fs.writeFileSync(caminhoArquivo, JSON.stringify(filmes, null, 2), 'utf-8')
 
-// Confirmação no terminal com a quantidade de filmes gravados.
 console.log(`Seed concluído: ${filmes.length} filmes gravados em ${caminhoArquivo}`)

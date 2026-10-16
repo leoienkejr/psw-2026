@@ -1,5 +1,3 @@
-// Dados iniciais copiados de cinetrack/parte1/app.js.
-// Cada filme tem id, titulo, ano, genero, poster, nota, status e comentario.
 export const filmesIniciais = [
   {
     id: 1,
@@ -63,9 +61,7 @@ export const filmesIniciais = [
   }
 ]
 
-// Próximo id da lista: o maior id existente mais 1.
-// Math.max sem argumentos devolve -Infinity, então a lista vazia
-// precisa do valor inicial 0 para o primeiro id ser 1.
+// O 0 cobre a lista vazia: Math.max sem argumentos devolve -Infinity.
 export function gerarId(filmes) {
   return Math.max(0, ...filmes.map((filme) => filme.id)) + 1
 }

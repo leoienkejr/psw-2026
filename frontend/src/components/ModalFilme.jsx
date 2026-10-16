@@ -1,9 +1,5 @@
 import { useEffect, useState } from 'react'
 
-// Estado inicial do formulário. Tudo em string (o que o usuário digita);
-// ano e nota são convertidos para número apenas no envio.
-// Se um filme foi passado, o modal abre em modo edição preenchido;
-// se não, abre vazio em modo inclusão.
 function formularioInicial(filme) {
   return {
     titulo: filme?.titulo ?? '',
@@ -16,8 +12,6 @@ function formularioInicial(filme) {
   }
 }
 
-// Mesmas regras de validarFilme() da Parte 1, agora sobre o objeto já
-// convertido (ano e nota numéricos).
 function validarFilme(dados) {
   const erros = []
 
@@ -40,22 +34,17 @@ function validarFilme(dados) {
   return erros
 }
 
-// Modal controlado: um único objeto de estado guarda todos os campos,
-// e cada input escreve nele via onChange com o atributo name.
 function ModalFilme({ filme, aoSalvar, aoFechar }) {
-  // filme === null → inclusão; filme é objeto → edição
   const editando = filme !== null
 
   const [form, setForm] = useState(() => formularioInicial(filme))
   const [erros, setErros] = useState([])
 
-  // Handler único: o name do campo vira a chave do objeto de estado.
   function aoMudar(evento) {
     const { name, value } = evento.target
     setForm({ ...form, [name]: value })
   }
 
-  // Escape fecha o modal, como na Parte 1.
   useEffect(() => {
     function aoTeclar(evento) {
       if (evento.key === 'Escape') aoFechar()
@@ -67,8 +56,6 @@ function ModalFilme({ filme, aoSalvar, aoFechar }) {
   function aoEnviar(evento) {
     evento.preventDefault()
 
-    // Conversão dos campos numéricos: ano e nota chegam como string;
-    // nota vazia vira 0 (sem nota), como na Parte 1.
     const dados = {
       titulo: form.titulo.trim(),
       ano: Number(form.ano),
@@ -85,7 +72,6 @@ function ModalFilme({ filme, aoSalvar, aoFechar }) {
       return
     }
 
-    // O App decide se inclui ou edita a partir de filmeEditando.
     aoSalvar(dados)
   }
 
@@ -146,7 +132,6 @@ function ModalFilme({ filme, aoSalvar, aoFechar }) {
             onChange={aoMudar}
           />
 
-          {/* O select usa os valores internos ("quero", "assistindo", "assistido") */}
           <label htmlFor="status-filme">Status</label>
           <select id="status-filme" name="status" value={form.status} onChange={aoMudar}>
             <option value="quero">Quero assistir</option>

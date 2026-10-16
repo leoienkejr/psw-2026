@@ -1,8 +1,5 @@
 import Titulo from './Titulo.jsx'
 
-// Cabeçalho com busca controlada e botão de adicionar.
-// O valor do campo vem de App (estado busca) e cada tecla sobe
-// pelo handler aoDigitar via onChange.
 function Header({ busca, aoDigitar, aoAdicionar }) {
   return (
     <header>
@@ -20,7 +17,6 @@ function Header({ busca, aoDigitar, aoAdicionar }) {
         onChange={(evento) => aoDigitar(evento.target.value)}
       />
 
-      {/* O "+" curto aparece em telas menores; o longo a partir de 1024px. */}
       <button
         type="button"
         className="btn-adicionar"
