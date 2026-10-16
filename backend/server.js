@@ -80,11 +80,46 @@ app.get('/stats', (req, res) => {
   })
 })
 
-app.post('/filmes', (req, res) => {
-  const { titulo, ano } = req.body
+// ---------------------------------------------------------------------------
+// validarFilme — porte da função da Parte 1 (cinetrack/parte1/app.js).
+// Devolve a lista de problemas encontrados; lista vazia = dados válidos.
+// O servidor é a última linha de defesa: valida tudo de novo mesmo que o
+// frontend já tenha validado, e devolve TODOS os erros de uma vez na
+// resposta 400 ({ "erros": [...] }).
+// ---------------------------------------------------------------------------
+function validarFilme(corpo) {
+  const erros = []
 
-  if (!titulo || !ano) {
-    return res.status(400).json({ erro: 'Informe título e ano do filme' })
+  if (!corpo.titulo || String(corpo.titulo).trim() === '') {
+    erros.push('Informe o título.')
+  }
+
+  const ano = Number(corpo.ano)
+  if (!Number.isInteger(ano) || ano < 1888 || ano > 2030) {
+    erros.push('O ano deve ser um número inteiro entre 1888 e 2030.')
+  }
+
+  if (!corpo.genero || String(corpo.genero).trim() === '') {
+    erros.push('Informe o gênero.')
+  }
+
+  if (!['quero', 'assistindo', 'assistido'].includes(corpo.status)) {
+    erros.push('Escolha um status válido (assistido, assistindo ou quero).')
+  }
+
+  const nota = Number(corpo.nota)
+  if (!Number.isInteger(nota) || nota < 1 || nota > 5) {
+    erros.push('A nota deve ser um número inteiro entre 1 e 5.')
+  }
+
+  return erros
+}
+
+app.post('/filmes', (req, res) => {
+  const erros = validarFilme(req.body)
+
+  if (erros.length > 0) {
+    return res.status(400).json({ erros })
   }
 
   const filmes = lerFilmes()
@@ -92,12 +127,12 @@ app.post('/filmes', (req, res) => {
 
   const novoFilme = {
     id: novoId,
-    titulo,
-    ano,
-    genero: req.body.genero || '',
+    titulo: req.body.titulo,
+    ano: Number(req.body.ano),
+    genero: req.body.genero,
     poster: req.body.poster || '',
-    nota: req.body.nota || 0,
-    status: req.body.status || 'quero',
+    nota: Number(req.body.nota),
+    status: req.body.status,
     comentario: req.body.comentario || ''
   }
 
@@ -109,6 +144,14 @@ app.post('/filmes', (req, res) => {
 
 app.put('/filmes/:id', (req, res) => {
   const id = Number(req.params.id)
+
+  // Mesma validação do POST: o corpo do PUT vem completo do formulário
+  // de edição, então os mesmos campos são obrigatórios.
+  const erros = validarFilme(req.body)
+
+  if (erros.length > 0) {
+    return res.status(400).json({ erros })
+  }
 
   const filmes = lerFilmes()
   const indice = filmes.findIndex((filme) => filme.id === id)

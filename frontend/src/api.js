@@ -15,7 +15,14 @@ async function requisicao(caminho, opcoes = {}) {
 
   if (!resposta.ok) {
     const corpo = await resposta.json().catch(() => null)
-    throw new Error(corpo?.erro || `Erro ${resposta.status}: ${resposta.statusText}`)
+
+    // Erro de validação do servidor (400) devolve { erros: [...] } com
+    // todos os problemas de uma vez; junta as mensagens para exibí-las.
+    const mensagem = Array.isArray(corpo?.erros)
+      ? corpo.erros.join(' ')
+      : (corpo?.erro || `Erro ${resposta.status}: ${resposta.statusText}`)
+
+    throw new Error(mensagem)
   }
 
   // DELETE devolve 204 sem corpo.

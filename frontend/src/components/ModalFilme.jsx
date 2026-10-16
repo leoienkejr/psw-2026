@@ -27,7 +27,10 @@ function validarFilme(dados) {
   if (!['quero', 'assistindo', 'assistido'].includes(dados.status)) {
     erros.push('Escolha um status válido.')
   }
-  if (dados.nota !== 0 && (dados.nota < 1 || dados.nota > 5)) {
+  // Agora o servidor também exige nota de 1 a 5 (POST e PUT devolvem 400
+  // com { erros: [...] }), então a validação do modal alinhou com ele:
+  // nota vazia (0) também é rejeitada aqui, antes de gastar a requisição.
+  if (!Number.isInteger(dados.nota) || dados.nota < 1 || dados.nota > 5) {
     erros.push('A nota deve ser de 1 a 5.')
   }
 
