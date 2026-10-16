@@ -15,8 +15,9 @@ const estrelas = (nota) => {
 }
 
 // Recebe um único objeto filme por props e o desenha como card.
-// Os botões Editar/Remover ainda não têm eventos (etapas seguintes).
-function CardFilme({ filme }) {
+// Os botões disparam os callbacks recebidos do App:
+// Editar abre o modal com os dados preenchidos; Remover exclui na hora.
+function CardFilme({ filme, aoEditar, aoRemover }) {
   return (
     <article className="card" data-id={filme.id}>
       <img src={filme.poster} alt={`Pôster do filme ${filme.titulo}`} />
@@ -28,10 +29,10 @@ function CardFilme({ filme }) {
         {estrelas(filme.nota)}
       </span>
       <span className={`badge ${filme.status}`}>{rotuloStatus(filme.status)}</span>
-      <button type="button" className="btn-editar">
+      <button type="button" className="btn-editar" onClick={() => aoEditar(filme)}>
         Editar
       </button>
-      <button type="button" className="btn-remover">
+      <button type="button" className="btn-remover" onClick={() => aoRemover(filme.id)}>
         Remover
       </button>
     </article>

@@ -62,3 +62,10 @@ export const filmesIniciais = [
     comentario: "Fotografia e ritmo: um marco brasileiro."
   }
 ]
+
+// Próximo id da lista: o maior id existente mais 1.
+// Math.max sem argumentos devolve -Infinity, então a lista vazia
+// precisa do valor inicial 0 para o primeiro id ser 1.
+export function gerarId(filmes) {
+  return Math.max(0, ...filmes.map((filme) => filme.id)) + 1
+}
