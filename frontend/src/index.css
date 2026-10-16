@@ -1,74 +1,484 @@
 /*
-  Cores do projeto (paleta escolhida no coolors.co, herdada da Parte 1):
+  Cores do projeto (paleta escolhida no coolors.co):
   - Primária: #1E3A8A (azul escuro)
   - Acento:   #F59E0B (âmbar/laranja)
   - Neutro:   #F4F4F5 (cinza claro de fundo)
+
+  Tema escuro automático via prefers-color-scheme.
 */
 
+/* ---------- Variáveis do tema ---------- */
 :root {
-  --cor-primaria: #1e3a8a;
-  --cor-primaria-contraste: #ffffff;
-  --cor-acento: #f59e0b;
-  --cor-fundo: #f4f4f5;
-  --cor-superficie: #ffffff;
-  --cor-texto: #1f2937;
-  --cor-texto-suave: #6b7280;
-  --espaco-3: 1rem;
-  --espaco-4: 1.5rem;
+    /* cores base */
+    --cor-primaria: #1E3A8A;
+    --cor-primaria-contraste: #FFFFFF;
+    --cor-acento: #F59E0B;
+    --cor-acento-forte: #B45309;
+    --cor-sobre-acento: #1F2937;
+    --cor-fundo: #F4F4F5;
+    --cor-superficie: #FFFFFF;
+    --cor-texto: #1F2937;
+    --cor-texto-suave: #6B7280;
+    --cor-borda: #DDDDDD;
+    --cor-overlay: rgba(0, 0, 0, 0.6);
+
+    /* cores semânticas dos status */
+    --cor-assistido-fundo: #D1FAE5;   /* verde: concluído */
+    --cor-assistido-texto: #065F46;
+    --cor-assistindo-fundo: #FEF3C7;  /* âmbar: em andamento */
+    --cor-assistindo-texto: #92400E;
+    --cor-quero-fundo: #DBEAFE;       /* azul: planejado */
+    --cor-quero-texto: #1E40AF;
+
+    /* raios e espaçamentos */
+    --raio-sm: 4px;
+    --raio-md: 8px;
+    --raio-pill: 999px;
+    --espaco-05: 0.5rem;
+    --espaco-1: 0.35rem;
+    --espaco-2: 0.75rem;
+    --espaco-3: 1rem;   /* 16px */
+    --espaco-4: 1.5rem; /* 24px */
+    --espaco-5: 2rem;
 }
 
+/* ---------- Tema escuro automático ---------- */
 @media (prefers-color-scheme: dark) {
-  :root {
-    --cor-primaria: #3b82f6;
-    --cor-primaria-contraste: #ffffff;
-    --cor-acento: #fbbf24;
-    --cor-fundo: #111827;
-    --cor-superficie: #1f2937;
-    --cor-texto: #f9fafb;
-    --cor-texto-suave: #9ca3af;
-  }
+    :root {
+        --cor-primaria: #3B82F6;
+        --cor-primaria-contraste: #FFFFFF;
+        --cor-acento: #FBBF24;
+        --cor-acento-forte: #D97706;
+        --cor-sobre-acento: #1F2937;
+        --cor-fundo: #111827;
+        --cor-superficie: #1F2937;
+        --cor-texto: #F9FAFB;
+        --cor-texto-suave: #9CA3AF;
+        --cor-borda: #374151;
+        --cor-overlay: rgba(0, 0, 0, 0.75);
+
+        --cor-assistido-fundo: #064E3B;
+        --cor-assistido-texto: #6EE7B7;
+        --cor-assistindo-fundo: #78350F;
+        --cor-assistindo-texto: #FCD34D;
+        --cor-quero-fundo: #1E3A8A;
+        --cor-quero-texto: #93C5FD;
+    }
 }
 
 *,
 *::before,
 *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+    transition:
+        background-color 0.2s ease,
+        color 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
+}
+
+:focus-visible {
+    outline: 2px solid var(--cor-acento);
+    outline-offset: 2px;
 }
 
 body {
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
-  color: var(--cor-texto);
-  background: var(--cor-fundo);
-  line-height: 1.6;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    color: var(--cor-texto);
+    background: var(--cor-fundo);
+    line-height: 1.6;
 }
 
-/* ---------- Cabeçalho ---------- */
+/* ---------- Cabeçalho (base mobile) ---------- */
 header {
-  background: var(--cor-primaria);
-  color: var(--cor-primaria-contraste);
-  padding: var(--espaco-3) var(--espaco-4);
+    background: var(--cor-primaria);
+    color: var(--cor-primaria-contraste);
+    padding: var(--espaco-3);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--espaco-2);
 }
 
+header h1 {
+    margin-right: auto;
+    font-size: clamp(1.5rem, 1rem + 2.5vw, 2rem);
+}
+
+/* Estilos do Titulo (Atividade 1) reaproveitados no Header */
 .titulo h1 {
-  font-size: clamp(1.5rem, 1rem + 2.5vw, 2rem);
-  line-height: 1.2;
+    font-size: clamp(1.5rem, 1rem + 2.5vw, 2rem);
+    line-height: 1.2;
 }
 
 .titulo-subtitulo {
-  font-size: 0.9rem;
-  font-weight: 400;
-  color: var(--cor-acento);
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--cor-acento);
 }
 
-/* ---------- Conteúdo ---------- */
-main {
-  padding: var(--espaco-4);
-  color: var(--cor-texto-suave);
+#busca {
+    flex: 1 1 180px;
+    max-width: 320px;
+    padding: 0.5rem var(--espaco-2);
+    border: none;
+    border-radius: var(--raio-sm);
+    background: var(--cor-superficie);
+    color: var(--cor-texto);
+}
+
+.btn-adicionar {
+    background: var(--cor-acento);
+    color: var(--cor-sobre-acento);
+    border: none;
+    padding: 0.5rem var(--espaco-3);
+    border-radius: var(--raio-sm);
+    font-weight: 600;
+}
+
+.btn-adicionar:hover {
+    background: var(--cor-acento-forte);
+    transform: translateY(-1px);
+}
+
+/* Na base mobile o botão mostra apenas o "+" */
+.btn-adicionar-longo {
+    display: none;
+}
+
+/* ---------- Filtros de status ---------- */
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--espaco-05);
+    padding: var(--espaco-2) var(--espaco-3);
+}
+
+nav button {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid var(--cor-primaria);
+    background: var(--cor-superficie);
+    color: var(--cor-primaria);
+    border-radius: var(--raio-pill);
+    font-size: 0.9rem;
+}
+
+nav button:hover {
+    background: var(--cor-quero-fundo);
+    color: var(--cor-quero-texto);
+}
+
+nav button.ativo {
+    background: var(--cor-primaria);
+    color: var(--cor-primaria-contraste);
+}
+
+/* ---------- Lista de cards ---------- */
+#lista {
+    display: grid;
+    /* colunas automáticas: entram quantas couberem, mínimo 200px */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: var(--espaco-3);
+    padding: var(--espaco-3);
+}
+
+.card {
+    background: var(--cor-superficie);
+    padding: var(--espaco-3);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-md);
+    box-shadow: 0 1px 4px #0002;
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-1);
+}
+
+.card img {
+    width: 100%;
+    aspect-ratio: 2 / 3;
+    object-fit: cover;         /* preenche sem distorcer */
+    display: block;
+    border-radius: var(--raio-sm);
+}
+
+.card h2 {
+    font-size: 1.05rem;
+}
+
+.card p {
+    color: var(--cor-texto-suave);
+    font-size: 0.9rem;
+}
+
+.estrelas {
+    color: var(--cor-acento);
+    letter-spacing: 2px;
+}
+
+.badge {
+    align-self: flex-start;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.15rem 0.6rem;
+    border-radius: var(--raio-pill);
+}
+
+.badge.assistido {
+    background: var(--cor-assistido-fundo);
+    color: var(--cor-assistido-texto);
+}
+
+.badge.assistindo {
+    background: var(--cor-assistindo-fundo);
+    color: var(--cor-assistindo-texto);
+}
+
+.badge.quero {
+    background: var(--cor-quero-fundo);
+    color: var(--cor-quero-texto);
+}
+
+.card button {
+    padding: 0.35rem 0.6rem;
+    border: 1px solid var(--cor-primaria);
+    background: var(--cor-superficie);
+    color: var(--cor-primaria);
+    border-radius: var(--raio-sm);
+    font-size: 0.85rem;
+}
+
+.card button:hover {
+    background: var(--cor-primaria);
+    color: var(--cor-primaria-contraste);
+    transform: translateY(-1px);
+}
+
+/* Mensagem do estado vazio — filtro ou busca sem resultados */
+.vazio {
+    padding: var(--espaco-4);
+    color: var(--cor-texto-suave);
+    font-size: 1.05rem;
+    text-align: center;
 }
 
 footer {
-  padding: var(--espaco-3) var(--espaco-4);
-  color: var(--cor-texto-suave);
+    padding: var(--espaco-3);
+    text-align: center;
+}
+
+footer a {
+    color: var(--cor-primaria);
+}
+
+/* ---------- Página adicionar.html ---------- */
+/* o conteúdo da página fica em um cartão centralizado,
+   com a mesma aparência do modal da index */
+#pagina-adicionar {
+    /* largura explícita para o margin:auto centralizar também no mobile */
+    width: min(528px, calc(100% - 2 * var(--espaco-3)));  /* 480px do modal + padding */
+    margin: var(--espaco-3) auto var(--espaco-4);
+    padding: var(--espaco-4);
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-md);
+    box-shadow: 0 1px 4px #0002;
+}
+
+#pagina-adicionar h1 {
+    font-size: 1.25rem;
+    margin-bottom: var(--espaco-2);
+}
+
+.link-voltar {
+    display: inline-block;
+    margin: var(--espaco-3) var(--espaco-3) 0;
+    color: var(--cor-primaria);
+}
+
+/* ---------- Modal ---------- */
+.modal {
+    position: fixed;
+    inset: 0;
+    background: var(--cor-overlay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--espaco-3);
+    z-index: 10;
+}
+
+/* o atributo hidden precisa vencer o display:flex acima */
+.modal[hidden] {
+    display: none;
+}
+
+/* coluna em flex: o título fica fixo e o formulário é quem rola,
+   preservando o padding interno do cartão mesmo com conteúdo longo */
+.modal-conteudo {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background: var(--cor-superficie);
+    color: var(--cor-texto);
+    width: min(480px, 100%);
+    max-height: 90vh;
+    padding: var(--espaco-4);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-md);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+    animation: modal-entrar 0.3s ease;
+}
+
+@keyframes modal-entrar {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-conteudo h2 {
+    font-size: 1.25rem;
+    margin-bottom: var(--espaco-2);
+}
+
+.modal-fechar {
+    position: absolute;
+    top: var(--espaco-2);
+    right: var(--espaco-2);
+    border: none;
+    background: transparent;
+    color: var(--cor-texto-suave);
+    font-size: 1.5rem;
+    line-height: 1;
+}
+
+.modal-fechar:hover {
+    color: var(--cor-texto);
+    transform: scale(1.15);
+}
+
+/* Erros de validação do modal */
+.erros {
+    margin-bottom: var(--espaco-2);
+    padding: var(--espaco-2) var(--espaco-3);
+    border: 1px solid #DC2626;
+    border-radius: var(--raio-sm);
+    background: #FEE2E2;
+    color: #991B1B;
+    font-size: 0.9rem;
+    list-style-position: inside;
+}
+
+@media (prefers-color-scheme: dark) {
+    .erros {
+        border-color: #F87171;
+        background: #450A0A;
+        color: #FCA5A5;
+    }
+}
+
+/* Campos do formulário — valem para o modal e para adicionar.html */
+#form-filme {
+    display: flex;
+    flex-direction: column;
+    gap: var(--espaco-1);
+    /* dentro do modal é o formulário que rola (o cartão é flex column),
+       assim o padding do modal nunca é "engolido" pela rolagem */
+    overflow-y: auto;
+    min-height: 0;
+}
+
+#form-filme label {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--cor-texto-suave);
+    margin-top: var(--espaco-1);
+}
+
+#form-filme input,
+#form-filme select,
+#form-filme textarea {
+    padding: 0.5rem var(--espaco-2);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio-sm);
+    background: var(--cor-fundo);
+    color: var(--cor-texto);
+    font: inherit;
+    transition: border-color 0.2s ease;
+}
+
+#form-filme textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+#form-filme input:focus-visible,
+#form-filme select:focus-visible,
+#form-filme textarea:focus-visible {
+    border-color: var(--cor-acento);
+}
+
+#form-filme button {
+    margin-top: var(--espaco-2);
+    padding: 0.6rem var(--espaco-3);
+    border-radius: var(--raio-sm);
+}
+
+#form-filme button[type="submit"] {
+    background: var(--cor-primaria);
+    color: var(--cor-primaria-contraste);
+    border: none;
+    font-weight: 600;
+}
+
+#form-filme button[type="button"] {
+    background: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    color: var(--cor-texto);
+}
+
+#form-filme button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+/* ---------- Desktop ---------- */
+@media (min-width: 1024px) {
+    header {
+        padding: var(--espaco-3) var(--espaco-5);
+    }
+
+    header h1 {
+        font-size: clamp(2rem, 1.5rem + 2vw, 2.75rem);
+    }
+
+    nav {
+        padding: var(--espaco-2) var(--espaco-5);
+    }
+
+    #lista {
+        gap: var(--espaco-4);
+        padding: var(--espaco-4) var(--espaco-5);
+    }
+
+    /* a partir de 1024px: esconde o "+" e mostra "+ Adicionar" */
+    .btn-adicionar-curto {
+        display: none;
+    }
+
+    .btn-adicionar-longo {
+        display: inline;
+    }
 }

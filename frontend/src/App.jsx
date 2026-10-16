@@ -1,17 +1,24 @@
-import Titulo from './components/Titulo.jsx'
+import { useState } from 'react'
+import Header from './components/Header.jsx'
+import Filtros from './components/Filtros.jsx'
+import ListaFilmes from './components/ListaFilmes.jsx'
+import { filmesIniciais } from './data/filmes.js'
 
 function App() {
+  // Estado inicial: os seis filmes da Parte 1.
+  // Sem eventos ainda — o setFilmes será usado nas etapas seguintes.
+  const [filmes, setFilmes] = useState(filmesIniciais)
+
   return (
     <>
-      <header>
-        <Titulo
-          nome="CineTrack"
-          subtitulo="Catálogo pessoal de filmes — o que você já viu, está vendo e quer ver."
-        />
-      </header>
+      <Header />
+
+      <Filtros />
 
       <main>
-        <p>Em breve: lista de filmes, filtros e cadastro.</p>
+        <section id="lista" aria-live="polite">
+          <ListaFilmes filmes={filmes} />
+        </section>
       </main>
 
       <footer>
