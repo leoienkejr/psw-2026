@@ -189,6 +189,32 @@ nav button.ativo {
     gap: var(--espaco-3);
     padding: var(--espaco-3);
 }
+/* Mensagens de estado da lista (Aula 5): carregando, erro e vazio */
+.carregando,
+.erro,
+.vazio {
+    grid-column: 1 / -1;   /* ocupa a largura toda da grid */
+    padding: var(--espaco-4);
+    text-align: center;
+    color: var(--cor-texto-suave);
+    font-size: 1.05rem;
+}
+
+.erro {
+    border: 1px solid #DC2626;
+    border-radius: var(--raio-md);
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+@media (prefers-color-scheme: dark) {
+    .erro {
+        border-color: #F87171;
+        background: #450A0A;
+        color: #FCA5A5;
+    }
+}
+
 
 .card {
     background: var(--cor-superficie);

@@ -1,13 +1,20 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from './components/Header.jsx'
 import Filtros from './components/Filtros.jsx'
 import ListaFilmes from './components/ListaFilmes.jsx'
 import ModalFilme from './components/ModalFilme.jsx'
-import { filmesIniciais, gerarId } from './data/filmes.js'
+import { gerarId } from './data/filmes.js'
+import { listar } from './api.js'
 
 function App() {
-  // Estado inicial: os seis filmes da Parte 1.
-  const [filmes, setFilmes] = useState(filmesIniciais)
+  // Estado inicial vazio (Aula 5): os filmes agora chegam da "API"
+  // e não do import direto de dados.
+  const [filmes, setFilmes] = useState([])
+
+  // Estados do ciclo de carregamento: carregando enquanto a promessa
+  // está pendente; erro com a mensagem caso listar() falhe.
+  const [carregando, setCarregando] = useState(true)
+  const [erro, setErro] = useState(null)
 
   // Estado elevado do filtro: qual status está ativo ("todos" por padrão).
   const [status, setStatus] = useState('todos')
@@ -19,6 +26,36 @@ function App() {
   // (null = modo inclusão).
   const [modalAberto, setModalAberto] = useState(false)
   const [filmeEditando, setFilmeEditando] = useState(null)
+
+  // Item 3: carregar os filmes em um efeito com dependências vazias.
+  // O efeito roda UMA VEZ, logo após a primeira renderização — é o
+  // lugar certo para efeitos colaterais como buscas na "API".
+  //
+  // Item 7: listar() NUNCA é chamada no corpo do componente. Se fosse
+  // (ex.: const filmes = listar()), ela dispararia em TODA renderização
+  // (cada tecla da busca, cada clique) e a resposta assíncrona chegaria
+  // depois, sem forma de colocar o resultado no estado. No efeito, a
+  // chamada acontece uma vez e os .then/.catch atualizam o estado.
+  useEffect(() => {
+    listar()
+      .then((dados) => {
+        setFilmes(dados)
+      })
+      .catch((motivo) => {
+        setErro(motivo.message)
+      })
+      .finally(() => {
+        setCarregando(false)
+      })
+  }, [])
+
+  // Item 5: sincronizar document.title com o total de filmes.
+  // Depende de filmes: roda de novo sempre que a lista mudar
+  // (inclusive ao adicionar/remover pelo CRUD da Atividade 4).
+  useEffect(() => {
+    const sufixo = filmes.length === 1 ? 'filme' : 'filmes'
+    document.title = `CineTrack (${filmes.length} ${sufixo})`
+  }, [filmes])
 
   // Visíveis = filmes que combinam o status ativo E o termo da busca.
   const visiveis = filmes.filter((filme) => {
@@ -87,13 +124,29 @@ function App() {
       />
 
       <main>
-        <section id="lista" aria-live="polite">
-          <ListaFilmes
-            filmes={visiveis}
-            aoEditar={abrirModalEdicao}
-            aoRemover={remover}
-          />
-        </section>
+        {/* Item 4: quatro estados possíveis, na ordem de prioridade:
+            carregando → erro → vazio → lista. */
+        carregando ? (
+          <section id="lista" aria-live="polite">
+            <p className="carregando">Carregando filmes…</p>
+          </section>
+        ) : erro ? (
+          <section id="lista" aria-live="assertive">
+            <p className="erro" role="alert">{erro}</p>
+          </section>
+        ) : (
+          <section id="lista" aria-live="polite">
+            {filmes.length === 0 ? (
+              <p className="vazio">Nenhum filme cadastrado ainda.</p>
+            ) : (
+              <ListaFilmes
+                filmes={visiveis}
+                aoEditar={abrirModalEdicao}
+                aoRemover={remover}
+              />
+            )}
+          </section>
+        )}
       </main>
 
       {modalAberto && (
